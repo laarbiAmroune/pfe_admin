@@ -3,7 +3,7 @@ import './bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-
+import'./login.css'
 import { useLocation } from "react-router-dom";
   import axios from "axios";
     function Login() {
@@ -17,7 +17,7 @@ import { useLocation } from "react-router-dom";
         console.log(email);console.log(password);
         event.preventDefault();
         try {
-          const response = await axios.post('http://127.0.0.1:3000/admin-page', {
+          const response = await axios.post('http://127.0.0.1:5000/admin-page', {
             email: email,
             password: password
           });
@@ -41,7 +41,7 @@ import { useLocation } from "react-router-dom";
       
 
 
-        return (
+        return (/*
  <Card.Body>
  <Card.Title className="text-center"> <h1>Connection</h1> </Card.Title>
 
@@ -68,9 +68,30 @@ import { useLocation } from "react-router-dom";
     </Card>
 
     </Card.Body>
- 
+ */
 
-
+    <div class="registration-form">
+        <div class="social-media">
+        <h1>Connection Admin</h1>
+        </div>
+        <form onSubmit={handleSubmit}>
+            <div class="form-icon">
+                <span><i class="icon icon-user"></i></span>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control item" id="email" placeholder="Email" onChange={handleEmailChange} />
+            </div>
+         
+            <div class="form-group">
+                <input type="password" class="form-control item" id="password" placeholder="Password" onChange={handlePasswordChange} />
+            </div>
+           
+            <div class="form-group">
+                <button type="submit" class="btn btn-block create-account">Se Connecter</button>
+            </div>
+        </form>
+      
+    </div>
    
   );
 };

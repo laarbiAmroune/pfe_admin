@@ -7,11 +7,12 @@ import {
   Button,
   Nav,
   Badge,
-  InputGroup
+  InputGroup,
+  Modal,
 } from "react-bootstrap";
 
-import React, { useState ,useEffect} from "react";
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 // function CartButton(props) {
 //   return (
@@ -27,14 +28,32 @@ import axios from 'axios';
 //   );
 // }
 
-function Product({navigation}) {
+function Product({ navigation }) {
+  const [show, setShow] = useState(false);
 
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const [userId, setUserId] = useState(null);
+
+  const handleDeleteProfile = async () => {
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:5000/deleteprofil?id=${userId}`
+      );
+      console.log(response.data.message);
+      if (response) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log("Error deleting profile");
+    }
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:3000/admin_users`);
-        
+        const response = await axios.get(`http://127.0.0.1:5000/admin_users`);
+
         console.log(response.data);
         setProducts(response.data);
       } catch (error) {
@@ -44,122 +63,93 @@ function Product({navigation}) {
     fetchUser();
   }, [navigation]);
 
-
   const [products, setProducts] = useState([
     {
       id: 1,
-      brand: "Head and Shoulders",
-      name: "Shampoo",
+      brand: "user",
+      name: "user",
       qty: 0,
-      price: 10.0
+      price: 10.0,
     },
-    {
-      id: 2,
-      brand: "Cream Silk",
-      name: "Conditioner",
-      qty: 0,
-      price: 12.0
-    },
-    {
-      id: 3,
-      brand: "Dove",
-      name: "Soap",
-      qty: 0,
-      price: 6.0
-    }
   ]);
 
   const [carts, setCarts] = useState([]);
 
-  const handleQtyChange = (e, index) => {
-    const newPro = [...products];
-    console.log(e.target.value);
-
-    newPro[index][e.target.name] = e.target.value;
-
-    // newPro[index]['subtotal'] = newPro[index]['price'] * e.target.value;
-    setProducts(newPro);
+  const navigateToConsultation = (id, avatar, username) => {
+    const url = `/UserTable/${id}?avatar=${encodeURIComponent(
+      avatar
+    )}&username=${encodeURIComponent(username)}`;
+    window.location.href = url;
   };
-
-  const handleAddToCart = (e, index) => {
-    const selectedPro = [...products];
-    const currentCart = [...carts];
-
-    if (carts.length === 0) {
-      setCarts((products) => [...products, selectedPro[index]]);
-    } else {
-      if (currentCart[index] !== undefined) {
-        if (currentCart[index]["id"] === index + 1) {
-          currentCart[index]["qty"] = selectedPro[index]["qty"];
-
-          setCarts(currentCart);
-        } else {
-          setCarts((products) => [...products, selectedPro[index]]);
-        }
-      } else {
-        setCarts((products) => [...products, selectedPro[index]]);
-      }
-    }
-  };
-
-  const handleAddQty = (e, index) => {
-    e.preventDefault();
-    const addQtyPro = [...products];
-    if (addQtyPro[index]["qty"] === "") {
-      addQtyPro[index]["qty"] = 0;
-    } else {
-      addQtyPro[index]["qty"] += 1;
-    }
-
-    setProducts(addQtyPro);
-  };
-
-  const handleRemoveQty = (e, index) => {
-    e.preventDefault();
-    const removeQtyPro = [...products];
-    if (removeQtyPro[index]["qty"] > 0) {
-      removeQtyPro[index]["qty"] -= 1;
-    }
-
-    setProducts(removeQtyPro);
-  };
-
   return (
     <React.Fragment>
       <br />
       <h4>Utilisateurs</h4>
       <Table bordered striped hover>
-        <thead className="table-warning">
+        <thead className="table-light">
           <tr>
             <td>Photo</td>
             <td>Pseudo</td>
             <td>Email</td>
-           
-          
+
             <td>Action</td>
           </tr>
         </thead>
         <tbody>
           {products.map((product, index) => (
             <tr>
-          <td>
-      <img src={`http://127.0.0.1:3000/${product.picture}`} alt={`Product ${index + 1}`} />
-    </td>
-    <td>{product.username}</td>
-    <td>{product.email}</td>
-             
+              <td>
+                <img
+                  src={`http://127.0.0.1:5000/${product.picture}`}
+                  alt={`Product ${index + 1}`}
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    borderRadius: "60px",
+                  }}
+                />
+              </td>
+              <td>{product.username}</td>
+              <td>{product.email}</td>
+
               <td>
                 <Button
-                  onClick={(e) => handleAddToCart(e, index)}
-                  variant="warning"
-                >
-                  Supprimer
+                  variant="info"
+                  onClick={() => {
+                    //handleShow();
+                    // setUserId(product._id);
+                    navigateToConsultation(
+                      product._id,
+                      product.picture,
+                      product.username
+                    );
+                  }}>
+                  consulter
                 </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
+
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal title</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>vous les vous vraiment supprimer cet user</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleDeleteProfile}>
+            oui
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </React.Fragment>
   );
 }

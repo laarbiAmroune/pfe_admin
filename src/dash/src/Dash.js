@@ -27,7 +27,7 @@ export default function Dash(props) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:3000/profile`, {
+        const response = await axios.get(`http://localhost:5000/profile`, {
           headers: { Authorization: "Bearer " + token },
         });
         
@@ -42,7 +42,7 @@ export default function Dash(props) {
 
 
 
-  const [open1, setOpen1] = useState(false);
+  const [open1, setOpen1] = useState(true);
   const [open2, setOpen2] = useState(false);
   const [open3, setOpen3] = useState(false);
   const [open4, setOpen4] = useState(false);
@@ -62,15 +62,15 @@ export default function Dash(props) {
         sticky="top"
       >
         <Container fluid>
-          <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+          <Navbar.Brand href="#home">Elmida-admin</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse
             id="responsive-navbar-nav"
             className="justify-content-end"
           >
             <Nav>
-              <Nav.Link eventKey={2} onClick={() => {}}>
-                CARTS <Badge bg="warning"></Badge>
+              <Nav.Link eventKey={2} onClick={() => { window.location.href = `/`;}}>
+            Deconnection <Badge bg="warning"></Badge>
                 <span className="visually-hidden">unread messages</span>
               </Nav.Link>
             </Nav>
