@@ -54,7 +54,7 @@ const UserTable = () => {
   const avatar = queryParams.get("avatar");
   const username = queryParams.get("username");
 
-  console.log(id);
+  console.log("hhhhhhhhhhhhhhhhhhh", id);
   /////////////////////////
   const [show, setShow] = useState(false);
 
@@ -63,7 +63,7 @@ const UserTable = () => {
   const handleDeleteProfile = async () => {
     try {
       const response = await axios.post(
-        `http://127.0.0.1:5000/deleteprofil?id=${id}`
+        `http://127.0.0.1:5000/deleteprofil?idU=${id}`
       );
       console.log(response.data.message);
       if (response) {
